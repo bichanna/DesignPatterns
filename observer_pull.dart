@@ -24,6 +24,7 @@ abstract class Subject {
   void registerSubscriber(Observer o);
   void removeSubscriber(Observer o);
   void deliverNews(String news);
+  String getNews();
 }
 
 class NobyTimes implements Subject{
@@ -38,6 +39,7 @@ class NobyTimes implements Subject{
   @override
   void registerSubscriber(Observer o) {
     subscribers.add(o);
+    o.register(this);
   }
 
   @override
@@ -50,25 +52,44 @@ class NobyTimes implements Subject{
     this.news = news;
     subscribers.forEach((s) => s.update());
   }
+
+  @override
+  String getNews() => news;
 }
 
 /*
   The interface that all subscribers implement
 */
 abstract class Observer {
+  late Subject subject;
+  
   void update();
+  void register(Subject s);
 }
 
 class SubscriberA implements Observer {
+  late Subject subject;
+
+  @override
+  void register(Subject s) {
+    subject = s;
+  }
+
   @override
   void update() {
-    // print("Subscriber A: I got the news, and it says \"${news}\"");
+    print("Subscriber A: I got the news, and it says \"${subject.getNews()}\"");
   }
 }
 
 class SubscriberB implements Observer {
+  late Subject subject;
+  
+  @override register(Subject s) {
+    subject = s;
+  }
+
   @override
   void update() {
-    // print("Subscriber B: So, today's news says \"${news}\"");
+    print("Subscriber B: So, today's news says \"${subject.getNews()}\"");
   }
 }
