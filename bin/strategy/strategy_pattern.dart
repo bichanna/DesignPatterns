@@ -5,6 +5,19 @@
   Pattern: Strategy
 */
 
+void main() {
+  Character elfA = Elf();
+  elfA.setWeapon(SwordBehavior());
+  elfA.fight();
+
+  Character humanB = Human();
+  humanB.setWeapon(KnifeBehavior());
+  humanB.fight();
+
+  Character trollC = Troll();
+  trollC.setWeapon(AxeBehavior());
+  trollC.fight();
+}
 
 /*
   The interface that all weapon behavior classes implement
@@ -59,18 +72,4 @@ class Elf extends Character {
   void fight() {
     print("An elf: ${weapon?.useWeapon()}");
   }
-}
-
-void main() {
-  Character elfA = Elf();
-  elfA.setWeapon(SwordBehavior());
-  elfA.fight();
-
-  Character humanB = Human();
-  humanB.setWeapon(KnifeBehavior());
-  humanB.fight();
-
-  Character trollC = Troll();
-  trollC.setWeapon(AxeBehavior());
-  trollC.fight();
 }
