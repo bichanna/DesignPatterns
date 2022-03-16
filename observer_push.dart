@@ -2,7 +2,7 @@
   Written by Nobuharu Shimazu
   Date: 2022/3/16
 
-  Pattern: Observer
+  Pattern: Observer (push)
 */
 
 void main() {
