@@ -6,20 +6,31 @@
 */
 
 void main() {
-  Beverage plainEspresso = Espresso();
-  print(plainEspresso.getDescription());
-  print(plainEspresso.cost().toStringAsFixed(2));
+  Beverage bigPlainEspresso = Espresso();
+  bigPlainEspresso.setSize(Size.VENTI); // does not change the price
+  print(bigPlainEspresso.getDescription());
+  print(bigPlainEspresso.cost().toStringAsFixed(2));
 
-  Beverage decafTripleWhip = Decaf();
-  for (int i = 0; i < 3; i++) decafTripleWhip = Whip(decafTripleWhip);
-  print(decafTripleWhip.getDescription());
-  print(decafTripleWhip.cost().toStringAsFixed(2));
+  Beverage smallDecafTripleWhip = Decaf();
+  for (int i = 0; i < 3; i++) smallDecafTripleWhip = Whip(smallDecafTripleWhip);
+  print(smallDecafTripleWhip.getDescription());
+  print(smallDecafTripleWhip.cost().toStringAsFixed(2));
 
-  Beverage espressoMochaWhip = Espresso();
-  espressoMochaWhip = Mocha(espressoMochaWhip);
-  espressoMochaWhip = Whip(espressoMochaWhip);
-  print(espressoMochaWhip.getDescription());
-  print(espressoMochaWhip.cost().toStringAsFixed(2));
+  Beverage mediumEspressoMochaWhip = Espresso();
+  mediumEspressoMochaWhip.setSize(Size.GRANDE);
+  mediumEspressoMochaWhip = Mocha(mediumEspressoMochaWhip);
+  mediumEspressoMochaWhip = Whip(mediumEspressoMochaWhip);
+  print(mediumEspressoMochaWhip.getDescription());
+  print(mediumEspressoMochaWhip.cost().toStringAsFixed(2));
+}
+
+/*
+  The Size enum
+*/
+enum Size {
+  TALL,   // small
+  GRANDE, // medium
+  VENTI,  // large
 }
 
 /*
@@ -27,8 +38,12 @@ void main() {
 */
 abstract class Beverage {
   String description = "??";
+  Size size = Size.TALL;
 
   String getDescription() => description;
+
+  void setSize(Size size) => this.size = size;
+  Size getSize() => size;
 
   double cost();
 }
@@ -69,7 +84,20 @@ class Mocha extends CondimentDecorator {
   String getDescription() => "${beverage.getDescription()}, Mocha";
 
   @override
-  double cost() => beverage.cost() + 0.30;
+  double cost() {
+    double cost = 0.35;
+    switch (beverage.getSize()) {
+      case Size.TALL:
+        cost -= 0.10;
+        break;
+      case Size.GRANDE:
+        break;
+      case Size.VENTI:
+        cost += 0.20;
+        break;
+    }
+    return beverage.cost() + cost;
+  }
 }
 
 class Whip extends CondimentDecorator {
@@ -81,5 +109,18 @@ class Whip extends CondimentDecorator {
   String getDescription() => "${beverage.getDescription()}, Whip";
 
   @override
-  double cost() => beverage.cost() + 0.30;
+  double cost() {
+    double cost = 0.30;
+    switch (beverage.getSize()) {
+      case Size.TALL:
+        cost -= 0.10;
+        break;
+      case Size.GRANDE:
+        break;
+      case Size.VENTI:
+        cost += 0.15;
+        break;
+    }
+    return beverage.cost() + cost;
+  }
 }
