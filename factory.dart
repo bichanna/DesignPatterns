@@ -8,7 +8,7 @@
 
 void main() {
   NYNobysPizzeria nyNobysPizzeria = NYNobysPizzeria();
-  for (int i = 0; i < 3; i++) nyNobysPizzeria.orderPizza("cheese");
+  nyNobysPizzeria.orderPizza("cheese");
   nyNobysPizzeria.orderPizza("pepperoni");
   
   
@@ -17,6 +17,43 @@ void main() {
   ChicagoNobysPizzeria chicagoNobysPizzeria = ChicagoNobysPizzeria();
   chicagoNobysPizzeria.orderPizza("pepperoni");
   chicagoNobysPizzeria.orderPizza("cheese");
+}
+
+/**
+ * The PizzaIngredientFactory interface that every franchises have to implement
+ */
+abstract class PizzaIngredientFactory {
+  Dough createDough();
+  Sauce createSauce();
+  Cheese createCheese();
+  Pepperoni createPepperoni();
+}
+
+class NYPizzaIngredientFactory implements PizzaIngredientFactory {
+  @override
+  Dough createDough() => ThinCrustDough();
+  
+  @override
+  Sauce createSauce() => MarinaraSause();
+
+  @override
+  Cheese createCheese() => ReggianoCheese();
+
+  Pepperoni createPepperoni() => SlicedPepperoni();
+}
+
+class ChicagoPizzaIngredientFactory implements PizzaIngredientFactory {
+  @override
+  Dough createDough() => ThickCrustDough();
+
+  @override
+  Sauce createSauce() => TomatoSauce();
+
+  @override
+  Cheese createCheese() => MozzarellaCheese();
+
+  @override
+  Pepperoni createPepperoni() => SlicedPepperoni();
 }
 
 /**
@@ -42,9 +79,20 @@ abstract class NobysPizzeria {
 class NYNobysPizzeria extends NobysPizzeria {
   @override
   Pizza createPizza(String pizzaType) {
-    if (pizzaType.toLowerCase() == "cheese") return NYCheesePizza();
-    if (pizzaType.toLowerCase() == "pepperoni") return NYPepperoniPizza();
-    return Pizza();
+    Pizza? pizza = null;
+    PizzaIngredientFactory ingredientFactory = NYPizzaIngredientFactory();
+
+    if (pizzaType.toLowerCase() == "cheese") {
+      pizza = CheesePizza(ingredientFactory);
+      pizza.setName("New York Style Cheese Pizza");
+    } else if (pizzaType.toLowerCase() == "pepperoni") {
+      pizza = PepperoniPizza(ingredientFactory);
+      pizza.setName("New York Style Pepperoni Pizza");
+    }
+
+    if (pizza != null) return pizza;
+
+    throw BadPizzaTypeException();
   }
 }
 
@@ -54,92 +102,100 @@ class NYNobysPizzeria extends NobysPizzeria {
 class ChicagoNobysPizzeria extends NobysPizzeria {
   @override
   Pizza createPizza(String pizzaType) {
-    if (pizzaType.toLowerCase() == "cheese") return ChicagoCheesePizza();
-    if (pizzaType.toLowerCase() == "pepperoni") return ChicagoPepperoniPizza();
-    return Pizza();
+    Pizza? pizza = null;
+    PizzaIngredientFactory ingredientFactory = ChicagoPizzaIngredientFactory();
+
+    if (pizzaType.toLowerCase() == "cheese") {
+      pizza = CheesePizza(ingredientFactory);
+      pizza.setName("Chicago Style Cheese Pizza");
+    } else if (pizzaType.toLowerCase() == "pepperoni") {
+      pizza = PepperoniPizza(ingredientFactory);
+      pizza.setName("Chicago Style Pepperoni Pizza");
+    }
+
+    if (pizza != null) return pizza;
+    
+    throw BadPizzaTypeException();
   }
 }
 
 /**
  * The Pizza class that all types of pizzas inherit
  */
-class Pizza {
-  void prepare() => print("Preparing.");
+abstract class Pizza {
+  late final String name;
 
-  void bake() => print("Baking.");
+  late Dough dough;
+  late Sauce sauce;
+  late Cheese cheese;
+  late Pepperoni pepperoni;
+  
+  void prepare();
 
-  void cut() => print("Cutting.");
+  void bake() => print("Baking for 20 minutes at 345");
 
-  void box() => print("Boxing");
+  void cut() => print("Cutting ${getName()}");
 
-  @override
-  String toString() => "Pizza";
+  void box() => print("Placing ${getName()} in a box");
+
+  void setName(String name) => this.name = name;
+
+  String getName() => name;
 }
 
-class NYCheesePizza extends Pizza {
-  @override
-  void prepare() => print("Preparing an NY-style cheese pizza.");
+class CheesePizza extends Pizza {
+  final PizzaIngredientFactory ingredientFactory;
 
+  CheesePizza(this.ingredientFactory);
+  
   @override
-  void bake() => print("Baking an NY-style pizza.");
-
-  @override
-  void cut() => print("Cutting an NY-style pizza");
-
-  @override
-  void box() => print("Boxing an NY-style pizza");
-
-  @override
-  String toString() => "NY-style cheese pizza";
+  void prepare() {
+    print("Preparing ${getName()}");
+    dough = ingredientFactory.createDough();
+    sauce = ingredientFactory.createSauce();
+    cheese = ingredientFactory.createCheese();
+  }
 }
 
-class NYPepperoniPizza extends Pizza {
-  @override
-  void prepare() => print("Preparing an NY-style pepperoni pizza.");
+class PepperoniPizza extends Pizza {
+  final PizzaIngredientFactory ingredientFactory;
+
+  PepperoniPizza(this.ingredientFactory);
 
   @override
-  void bake() => print("Baking an NY-style pepperoni pizza.");
-
-  @override
-  void cut() => print("Cutting an NY-style pepperoni pizza");
-
-  @override
-  void box() => print("Boxing an NY-style pepperoni pizza");
-
-  @override
-  String toString() => "NY-style pepperoni pizza";
+  void prepare() {
+    print("Preparing ${getName()}");
+    dough = ingredientFactory.createDough();
+    sauce = ingredientFactory.createSauce();
+    cheese = ingredientFactory.createCheese();
+    pepperoni = ingredientFactory.createPepperoni();
+  }
 }
 
-class ChicagoCheesePizza extends Pizza {
-  @override
-  void prepare() => print("Preparing a Chicago-style cheese pizza.");
+// ==================== INGREDIENTS =======================
 
-  @override
-  void bake() => print("Baking a Chicago-style pizza.");
+abstract class Dough {}
+class ThinCrustDough extends Dough {}
+class ThickCrustDough extends Dough {}
 
-  @override
-  void cut() => print("Cutting a Chicago-style pizza");
+abstract class Sauce {}
+class MarinaraSause extends Sauce {}
+class TomatoSauce extends Sauce {}
 
-  @override
-  void box() => print("Boxing a Chicago-style pizza");
+abstract class Cheese {}
+class ReggianoCheese extends Cheese {}
+class MozzarellaCheese extends Cheese {}
 
-  @override
-  String toString() => "Chicago-style cheese pizza";
-}
+abstract class Pepperoni {}
+class SlicedPepperoni extends Pepperoni {}
 
-class ChicagoPepperoniPizza extends Pizza {
-  @override
-  void prepare() => print("Preparing a Chicago-style pepperoni pizza.");
 
-  @override
-  void bake() => print("Baking a Chicago-style pepperoni pizza.");
+// ==================== EXCEPTION(S) =======================
 
-  @override
-  void cut() => print("Cutting a Chicago-style pepperoni pizza");
-
-  @override
-  void box() => print("Boxing a Chicago-style pepperoni pizza");
-
-  @override
-  String toString() => "Chicago-style pepperoni pizza";
+class BadPizzaTypeException implements Exception {
+  late String cause;
+  
+  BadPizzaTypeException({String cause = "That pizza type does not exist!"}) {
+    this.cause = cause;
+  }
 }
