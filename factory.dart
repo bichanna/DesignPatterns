@@ -2,7 +2,7 @@
  * Written by Nobuharu Shimazu
  * Date: 2022/3/17
  * 
- * Pattern: Factory (franchising Noby's Pizzeria across America!)
+ * Pattern: Abstract Factory (franchising Noby's Pizzeria across America!)
  * (BTW, I just watched the McDonald's movie, The Founder)
  */
 
