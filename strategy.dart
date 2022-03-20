@@ -6,15 +6,15 @@
 */
 
 void main() {
-  Character elfA = Elf();
+  Humanoid elfA = Elf();
   elfA.setWeapon(SwordBehavior());
   elfA.fight();
 
-  Character humanB = Human();
+  Humanoid humanB = Human();
   humanB.setWeapon(KnifeBehavior());
   humanB.fight();
 
-  Character trollC = Troll();
+  Humanoid trollC = Troll();
   trollC.setWeapon(AxeBehavior());
   trollC.fight();
 }
@@ -43,9 +43,9 @@ class KnifeBehavior implements WeaponBehavior {
 
 
 /*
-  The abstract class that all character classes inherit
+  The abstract class that all humanoid classes inherit
 */
-abstract class Character {
+abstract class Humanoid {
   WeaponBehavior? weapon;
 
   void fight();
@@ -53,21 +53,21 @@ abstract class Character {
   setWeapon(WeaponBehavior wb) => weapon = wb;
 }
 
-class Human extends Character {
+class Human extends Humanoid {
   @override
   void fight() {
     print("A human: ${weapon?.useWeapon()}");
   }
 }
 
-class Troll extends Character {
+class Troll extends Humanoid {
   @override
   void fight() {
     print("A troll: ${weapon?.useWeapon()}");
   }
 }
 
-class Elf extends Character {
+class Elf extends Humanoid {
   @override
   void fight() {
     print("An elf: ${weapon?.useWeapon()}");
