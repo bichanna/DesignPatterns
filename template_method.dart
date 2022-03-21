@@ -2,7 +2,7 @@
  * Written by Nobuharu Shimazu
  * Date: 2022/3/21
  * 
- * Pattern: Template Method
+ * Pattern: Template Method (& Hooks)
  */
 
 import "dart:io";
