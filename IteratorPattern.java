@@ -84,9 +84,9 @@ class Waitress {
         Iterator breakfastIterator = breakfastMenu.createIterator();
         Iterator lunchIterator = lunchMenu.createIterator();
         
-        System.out.println("Menu\n ------ \n Breakfast");
+        System.out.println(" ---- Menu ---- \n Breakfast");
         printMenu(breakfastIterator);
-        System.out.println("Lunch");
+        System.out.println(" Lunch");
         printMenu(lunchIterator);
     }
 
@@ -156,7 +156,7 @@ class BreakfastMenu {
 class LunchMenu {
     private static final int MAX_MENU_ITEMS = 3;
     int numberOfItems = 0;
-    MenuItem[] menuItems;
+    MenuItem[] menuItems = new MenuItem[MAX_MENU_ITEMS];
 
     public LunchMenu() {
         addMenuItem("Blah x3", "Blah blah blah", false, 8.79);
